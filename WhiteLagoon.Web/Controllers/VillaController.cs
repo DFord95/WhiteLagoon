@@ -68,5 +68,31 @@ namespace WhiteLagoon.Web.Controllers
 
             return View(obj);
         }
+
+        public IActionResult Delete(int villaId)
+        {
+            Villa? obj = _db.Villas.FirstOrDefault(x => x.Id == villaId);
+
+            if (obj == null)
+            {
+                return RedirectToAction("Error", "Home");
+            }
+
+            return View(obj);
+        }
+
+        //[HttpPost]
+        //public IActionResult Delete(Villa obj)
+        //{
+        //    if (ModelState.IsValid && obj.Id > 0)
+        //    {
+        //        _db.Villas.Update(obj);
+        //        _db.SaveChanges();
+
+        //        return RedirectToAction("Index");
+        //    }
+
+        //    return View(obj);
+        //}
     }
 }
