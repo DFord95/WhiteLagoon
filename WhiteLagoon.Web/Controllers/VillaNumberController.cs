@@ -29,6 +29,8 @@ namespace WhiteLagoon.Web.Controllers
                 Value = x.Id.ToString()
             });
 
+            ViewData["VillaList"] = list;
+
             return View();
         }
 
