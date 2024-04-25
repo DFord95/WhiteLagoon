@@ -38,19 +38,32 @@ namespace WhiteLagoon.Web.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(VillaNumber obj)
+        public IActionResult Create(VillaNumberVM obj)
         {
             //ModelState.Remove("Villa");
 
-            if (ModelState.IsValid)
+            bool roomNumberExists = _db.VillaNumbers.Any(x => x.Villa_Number == obj.VillaNumber.Villa_Number);
+
+            if (ModelState.IsValid && !roomNumberExists)
             {
-                _db.VillaNumbers.Add(obj);
+                _db.VillaNumbers.Add(obj.VillaNumber);
                 _db.SaveChanges();
 
                 TempData["success"] = "The Villa Number has been created successfully.";
 
                 return RedirectToAction("Index");
             }
+
+            if (roomNumberExists)
+            {
+                TempData["error"] = "The Villa Number already exists.";
+            }
+
+            obj.VillaList = _db.Villas.ToList().Select(x => new SelectListItem
+            {
+                Text = x.Name,
+                Value = x.Id.ToString()
+            });
 
             return View(obj);
         }
