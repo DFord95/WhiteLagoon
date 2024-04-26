@@ -51,7 +51,7 @@ namespace WhiteLagoon.Web.Controllers
 
                 TempData["success"] = "The Villa Number has been created successfully.";
 
-                return RedirectToAction("Index");
+                return RedirectToAction(nameof(Index));
             }
 
             if (roomNumberExists)
@@ -99,7 +99,7 @@ namespace WhiteLagoon.Web.Controllers
 
                 TempData["success"] = "The Villa Number has been updated successfully.";
 
-                return RedirectToAction("Index");
+                return RedirectToAction(nameof(Index));
             }
             
             villaNumberVM.VillaList = _db.Villas.ToList().Select(x => new SelectListItem
@@ -145,7 +145,7 @@ namespace WhiteLagoon.Web.Controllers
 
                 TempData["success"] = "The Villa Number has been deleted successfully.";
 
-                return RedirectToAction("Index");
+                return RedirectToAction(nameof(Index));
             }
 
             TempData["error"] = "The Villa Number could not be deleted.";
