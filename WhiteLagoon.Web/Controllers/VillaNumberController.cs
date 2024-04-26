@@ -90,19 +90,25 @@ namespace WhiteLagoon.Web.Controllers
         }
 
         [HttpPost]
-        public IActionResult Update(Villa obj)
+        public IActionResult Update(VillaNumberVM villaNumberVM)
         {
-            if (ModelState.IsValid && obj.Id>0)
+            if (ModelState.IsValid)
             {
-                _db.Villas.Update(obj);
+                _db.VillaNumbers.Update(villaNumberVM.VillaNumber);
                 _db.SaveChanges();
 
-                TempData["success"] = "The villa has been updated successfully.";
+                TempData["success"] = "The Villa Number has been updated successfully.";
 
                 return RedirectToAction("Index");
             }
+            
+            villaNumberVM.VillaList = _db.Villas.ToList().Select(x => new SelectListItem
+            {
+                Text = x.Name,
+                Value = x.Id.ToString()
+            });
 
-            return View(obj);
+            return View(villaNumberVM);
         }
 
         public IActionResult Delete(int villaId)
