@@ -78,7 +78,7 @@ namespace WhiteLagoon.Web.Controllers
         [HttpPost]
         public IActionResult Update(Villa obj)
         {
-            if (ModelState.IsValid && obj.Id>0)
+            if (ModelState.IsValid && obj.Id > 0)
             {
                 if (obj.Image != null)
                 {
@@ -96,9 +96,16 @@ namespace WhiteLagoon.Web.Controllers
                     }
 
                     using (var fileStream = new FileStream(Path.Combine(imagePath, fileName), FileMode.Create))
-                    obj.Image.CopyTo(fileStream);
+                    {
+                        obj.Image.CopyTo(fileStream);
+                    }
 
                     obj.ImageUrl = @"\images\Villa Images\" + fileName;
+                }
+                else if (string.IsNullOrEmpty(obj.ImageUrl))
+                {
+                    // Set default image URL if none is provided
+                    obj.ImageUrl = "https://placehold.com/600x400";
                 }
 
                 _unitOfWork.Villa.Update(obj);
@@ -130,7 +137,7 @@ namespace WhiteLagoon.Web.Controllers
             Villa? objFromDb = _unitOfWork.Villa.Get(x => x.Id == obj.Id);
 
             if (objFromDb is not null)
-            {
+            {   
                 _unitOfWork.Villa.Remove(objFromDb);
                 _unitOfWork.Save();
 
