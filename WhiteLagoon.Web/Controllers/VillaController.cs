@@ -49,7 +49,7 @@ namespace WhiteLagoon.Web.Controllers
                 }
                 else
                 {
-                    obj.ImageUrl = "https://placehold.com/600x400";
+                    obj.ImageUrl = "https://placehold.co/600x400";
                 }
 
                 _unitOfWork.Villa.Add(obj);
@@ -102,10 +102,10 @@ namespace WhiteLagoon.Web.Controllers
 
                     obj.ImageUrl = @"\images\Villa Images\" + fileName;
                 }
-                else if (string.IsNullOrEmpty(obj.ImageUrl))
+                else  
                 {
                     // Set default image URL if none is provided
-                    obj.ImageUrl = "https://placehold.com/600x400";
+                    obj.ImageUrl = "https://placehold.co/600x400";
                 }
 
                 _unitOfWork.Villa.Update(obj);
