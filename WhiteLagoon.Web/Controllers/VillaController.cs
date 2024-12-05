@@ -102,7 +102,7 @@ namespace WhiteLagoon.Web.Controllers
 
                     obj.ImageUrl = @"\images\Villa Images\" + fileName;
                 }
-                else  
+                else if (string.IsNullOrEmpty(obj.ImageUrl))
                 {
                     // Set default image URL if none is provided
                     obj.ImageUrl = "https://placehold.co/600x400";
