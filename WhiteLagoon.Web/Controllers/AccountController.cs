@@ -15,8 +15,8 @@ namespace WhiteLagoon.Web.Controllers
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly RoleManager<IdentityRole> _roleManager;
 
-        public AccountController(IUnitOfWork unitOfWork, UserManager<ApplicationUser> userManager, 
-            RoleManager<IdentityRole> roleManager,SignInManager<ApplicationUser> signInManager)
+        public AccountController(IUnitOfWork unitOfWork, UserManager<ApplicationUser> userManager,
+            RoleManager<IdentityRole> roleManager, SignInManager<ApplicationUser> signInManager)
         {
             _unitOfWork = unitOfWork;
             _userManager = userManager;
@@ -24,7 +24,7 @@ namespace WhiteLagoon.Web.Controllers
             _signInManager = signInManager;
         }
 
-        public IActionResult Login(string returnUrl=null)
+        public IActionResult Login(string returnUrl = null)
         {
             returnUrl ??= Url.Content("~/");
 
@@ -59,7 +59,7 @@ namespace WhiteLagoon.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Register(RegisterVM registerVM)
         {
-            ApplicationUser user = new ()
+            ApplicationUser user = new()
             {
                 Name = registerVM.Name,
                 Email = registerVM.Email,
@@ -74,7 +74,7 @@ namespace WhiteLagoon.Web.Controllers
 
             if (result.Succeeded)
             {
-                if(!string.IsNullOrEmpty(registerVM.Role))
+                if (!string.IsNullOrEmpty(registerVM.Role))
                 {
                     await _userManager.AddToRoleAsync(user, registerVM.Role);
                 }
@@ -83,7 +83,7 @@ namespace WhiteLagoon.Web.Controllers
                     await _userManager.AddToRoleAsync(user, SD.Role_Customer);
                 }
 
-                await _signInManager.SignInAsync(user, isPersistent:false);  //automatically signs in the user
+                await _signInManager.SignInAsync(user, isPersistent: false);  //automatically signs in the user
 
                 if (string.IsNullOrEmpty(registerVM.RedirectUrl))
                 {
@@ -107,6 +107,34 @@ namespace WhiteLagoon.Web.Controllers
             });
 
             return View(registerVM);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Login(LoginVM loginVM)
+        {
+            if (ModelState.IsValid)
+            {
+                var result = await _signInManager
+                    .PasswordSignInAsync(loginVM.Email, loginVM.Password, loginVM.RememberMe, lockoutOnFailure: false);
+
+                if (result.Succeeded)
+                {
+                    if (string.IsNullOrEmpty(loginVM.RedirectUrl))
+                    {
+                        return RedirectToAction("Index", "Home");
+                    }
+                    else
+                    {
+                        return LocalRedirect(loginVM.RedirectUrl);
+                    }
+                }
+                else
+                {
+                    ModelState.AddModelError("", "Invalid login attempt.");
+                }
+            }
+
+            return View(loginVM);
         }
     }
 }
