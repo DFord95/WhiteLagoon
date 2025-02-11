@@ -32,13 +32,27 @@ namespace WhiteLagoon.Web.Controllers
         {
             homeVM.VillaList = _unitOfWork.Villa.GetAll(includeProperties: "VillaAmenities");
 
-            foreach (var villa in homeVM.VillaList)
+            return View(homeVM);
+        }
+
+        public IActionResult GetVillasByDate(int nights, DateOnly checkInDate)
+        {
+            var villaList = _unitOfWork.Villa.GetAll(includeProperties: "VillaAmenities").ToList();
+
+            foreach (var villa in villaList)
             {
                 if (villa.Id % 2 == 0)
                 {
                     villa.IsAvailable = false;
                 }
             }
+
+            HomeVM homeVM = new HomeVM
+            {
+                CheckInDate = checkInDate,
+                VillaList = villaList,
+                Nights = nights,
+            };
 
             return View(homeVM);
         }
