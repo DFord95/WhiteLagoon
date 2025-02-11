@@ -65,19 +65,30 @@
     <script>
         function fnLoadVillaList() {
 
+            $('.spinner').show();
+
             var objData = {
                 checkInDate: $("#CheckInDate").val(),
                 night: $("#Nights").val()
             };
 
             $.ajax({
-                    url: "@Url.Action("GetVillasByDate", "Home")",
-                    data: objData,
                     type: "POST",
+                    data: objData,
+                    url: "@Url.Action("GetVillasByDate", "Home")",
                     success: function (data) {
                         $("#VillasList").empty();
                         $("#VillasList").html(data);
+                        $('.spinner').hide();
                     },
+                    failure: function (response) {
+                        $('.spinner').hide();
+                        alert(response.responseText);
+                    },
+                    error: function (response) {
+                        $('.spinner').hide();
+                        alert(response.responseText);
+                    }
             });
         }
     </script>
